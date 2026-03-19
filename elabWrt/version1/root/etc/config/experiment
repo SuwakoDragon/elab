@@ -1,0 +1,3 @@
+config experiment 'global'
+    option exp_type 'dns_fault'
+    option wan_iface 'wan'

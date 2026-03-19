@@ -1,0 +1,66 @@
+<%#
+  elab is a clean HTML5 theme for LuCI. It is based on luci-theme-material Argon Template
+
+  luci-theme-elab
+  Copyright 2026 elab
+
+  Licensed to the public under the Apache License 2.0
+%>
+
+<%+header%>
+
+<h2 name="content"><%:实验系统%></h2>
+
+<div class="cbi-map">
+    <div class="cbi-section">
+        <div class="cbi-section-title"><%:实验控制%></div>
+        <div class="cbi-section-node">
+            <div class="cbi-value">
+                <label class="cbi-value-title" for="experiment_select"><%:选择实验场景%></label>
+                <div class="cbi-value-field">
+                    <select id="experiment_select" class="cbi-input-select">
+                        <option value="none"><%:请选择一个实验%></option>
+                        <option value="dns_fault"><%:EXP-001: DNS 解析失败%></option>
+                        <!-- 之后在这里添加更多实验选项 -->
+                    </select>
+                </div>
+            </div>
+            <div class="cbi-value">
+                <div class="cbi-value-field">
+                    <button id="start_button" class="cbi-button cbi-button-apply"><%:开始实验%></button>
+                    <button id="reset_button" class="cbi-button cbi-button-reset"><%:重置实验%></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="cbi-section">
+        <div class="cbi-section-title"><%:诊断与提示%></div>
+        <div class="cbi-section-node">
+            <div id="hint_area" style="padding: 15px; min-height: 100px; background-color: #f7f7f7; border: 1px solid #ccc; border-radius: 4px;">
+                <p><%:请先选择一个实验场景，然后点击“开始实验”。%></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cbi-section">
+        <div class="cbi-section-title"><%:命令行终端%></div>
+        <div class="cbi-section-node">
+            <div id="terminal_wrapper" style="padding: 15px;">
+                <!-- 终端将在这里加载 -->
+                <p><%:终端功能待集成...%></p>
+            </div>
+        </div>
+    </div>
+
+    <div class="cbi-section" id="gui_repair_section" style="display:none;">
+        <div class="cbi-section-title"><%:图形化修复%></div>
+        <div class="cbi-section-node" id="gui_repair_content">
+            <!-- 图形化修复界面将根据实验动态生成 -->
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="<%=resource%>/experiment.js"></script>
+
+<%+footer%>

@@ -1,0 +1,11 @@
+{
+  "luci-app-experiment": {
+    "description": "Grant access to experiment LuCI pages",
+    "read": {
+      "uci": ["experiment", "network", "dhcp", "firewall"]
+    },
+    "write": {
+      "uci": ["experiment", "network", "dhcp", "firewall"]
+    }
+  }
+}

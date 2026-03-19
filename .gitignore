@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.venv/
+venv/
+
+# Build output
+dist/
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Large VM artifact should go to GitHub Release asset
+*.ova

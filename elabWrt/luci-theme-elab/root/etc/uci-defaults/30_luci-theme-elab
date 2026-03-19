@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ "$PKG_UPGRADE" != 1 ]
+then
+	uci get luci.themes.elab >/dev/null 2>&1 || \
+	uci batch <<-EOF
+		set luci.themes.elab=/luci-static/elab
+		set luci.main.mediaurlbase=/luci-static/elab
+		commit luci
+	EOF
+fi
+
+exit 0

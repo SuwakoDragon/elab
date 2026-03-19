@@ -1,0 +1,6 @@
+notes_dir: "notes"       # Markdown笔记目录
+templates_dir: "templates" # 模板目录
+dist_dir: "dist"         # 输出目录
+github_pages_repo: "https://github.com/SuwakoDragon/elab.git" # GitHub仓库
+github_pages_branch: "gh-pages" # Pages发布分支
+images_dir: "images"       # 图片目录
