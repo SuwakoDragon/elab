@@ -25,6 +25,47 @@ IMAGES_DIR = BASE_DIR / config['images_dir']  # 图片目录
 # 创建Jinja环境
 env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
 
+IMAGE_EXT_PATTERN = re.compile(r"\.(png|jpg|jpeg|gif|svg|webp|bmp)$", re.IGNORECASE)
+
+
+def _to_relative_image_path(path_text):
+    """Convert local absolute image paths to a site-relative images path."""
+    raw = path_text.strip().strip('"\'')
+    normalized = raw.replace('\\', '/')
+
+    is_local_abs = bool(re.match(r"^[A-Za-z]:/", normalized) or normalized.startswith('/'))
+    if not is_local_abs or not IMAGE_EXT_PATTERN.search(normalized):
+        return path_text
+
+    filename = os.path.basename(normalized)
+    return f"images/{filename}"
+
+
+def normalize_asset_paths(md_content):
+    """Normalize local absolute image references for web publishing."""
+
+    def replace_markdown_image(match):
+        alt_text = match.group(1)
+        path_text = match.group(2)
+        rel = _to_relative_image_path(path_text)
+        return f"![{alt_text}]({rel})"
+
+    def replace_html_image(match):
+        prefix = match.group(1)
+        path_text = match.group(2)
+        suffix = match.group(3)
+        rel = _to_relative_image_path(path_text)
+        return f"{prefix}{rel}{suffix}"
+
+    content = re.sub(
+        r"!\[([^\]]*)\]\((.+?\.(?:png|jpg|jpeg|gif|svg|webp|bmp))(?:\s+\"[^\"]*\")?\)",
+        replace_markdown_image,
+        md_content,
+        flags=re.IGNORECASE,
+    )
+    content = re.sub(r"(<img[^>]*\ssrc=[\"'])([^\"']+)([\"'])", replace_html_image, content)
+    return content
+
 def remove_readonly(func, path, excinfo):
     """解决Windows文件权限问题"""
     os.chmod(path, stat.S_IWRITE)
@@ -44,7 +85,7 @@ def extract_toc(md_content):
 def generate_note_page(note_path):
     """生成单个笔记页面"""
     with open(note_path, 'r', encoding='utf-8') as f:
-        md_content = f.read()
+        md_content = normalize_asset_paths(f.read())
     
     # 转换Markdown为HTML
     html_content = markdown.markdown(
