@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elabwrt食用说明 - 微机安装与调试</title>
+    <link rel="stylesheet" href="static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="dut-logo">
+                    <!-- 添加图标 -->
+                    <img src="elab.png" alt="大连理工大学图标" class="dut-icon">
+                    <div class="dut-titles">
+                        <span class="dut">微机安装与调试</span>
+                        <span class="course">ELAB</span>
+                    </div>
+                </div>
+                <a href="index.html" class="back-btn">返回首页</a>
+            </div>
+        </header>
+        
+        <main class="content-wrapper">
+            <aside class="toc">
+                <div class="toc-header">
+                    <h2>大纲导航</h2>
+                </div>
+                <ul class="toc-list">
+                    
+                    <li class="toc-level-1">
+                        <a href="#elabwrt">elabWrt 安装与实验说明（学生版）</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#1">1. 发放文件信息</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#2">2. 环境要求</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#3-ova">3. 导入 OVA</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#4">4. 网络配置（必须）</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#5">5. 启动与登录</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#6">6. 实验基本流程（课堂）</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#7">7. 常用排障（学生）</a>
+                    </li>
+                    
+                    <li class="toc-level-3">
+                        <a href="#71-19216822">7.1 无法打开 192.168.2.2</a>
+                    </li>
+                    
+                    <li class="toc-level-3">
+                        <a href="#72">7.2 页面样式异常或菜单不正常</a>
+                    </li>
+                    
+                    <li class="toc-level-3">
+                        <a href="#73">7.3 实验做崩了</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#8">8. 教师建议（发放前）</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#9">9. 版本记录</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#1ova">1.导入ova</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#2">2.配置虚拟网络适配器与虚拟网卡</a>
+                    </li>
+                    
+                    <li class="toc-level-2">
+                        <a href="#3">3.启动</a>
+                    </li>
+                    
+                </ul>
+            </aside>
+            
+            <article class="content">
+                <div class="content-header">
+                    <h1>Elabwrt食用说明</h1>
+                    <div class="content-meta">
+                        <span>最后更新: 2026-03-19</span>
+                    </div>
+                </div>
+                <div class="content-body">
+                    <h1 id="elabwrt">elabWrt 安装与实验说明（学生版）</h1>
+<p>本文用于指导学生导入虚拟机、访问 LuCI、完成网络故障实验。</p>
+<h2 id="1">1. 发放文件信息</h2>
+<ul>
+<li>文件名：<code>elabWrt_v0.ova</code></li>
+<li>SHA256：<code>77002F433A1F26A80A4CFE0D080B61C08085231077DE7D6A16A2508DE1E21848</code></li>
+</ul>
+<p>建议安装前先校验文件完整性。</p>
+<p>Windows PowerShell 校验命令：</p>
+<pre><code class="language-powershell">Get-FileHash &quot;C:\路径\elabWrt_v0.ova&quot; -Algorithm SHA256
+</code></pre>
+<p>对比输出哈希值是否与上方一致。</p>
+<hr />
+<h2 id="2">2. 环境要求</h2>
+<ul>
+<li>Windows 10/11</li>
+<li>VMware Workstation（建议 16+）</li>
+<li>浏览器（Edge/Chrome）</li>
+</ul>
+<hr />
+<h2 id="3-ova">3. 导入 OVA</h2>
+<ol>
+<li>打开 VMware Workstation。</li>
+<li>菜单 <code>File -&gt; Open...</code>，选择 <code>elabWrt_v0.ova</code>。</li>
+<li>给虚拟机命名（例如：<code>elabWrt_student01</code>）。</li>
+<li>选择保存路径，点击导入。</li>
+<li>导入完成后不要马上改网卡设置，先按下文检查。</li>
+</ol>
+<hr />
+<h2 id="4">4. 网络配置（必须）</h2>
+<p>本实验采用本机隔离网段，默认固定如下：</p>
+<ul>
+<li>主机侧虚拟网卡（VMnet1）：<code>192.168.2.1/24</code></li>
+<li>OpenWrt（LuCI）：<code>192.168.2.2</code></li>
+</ul>
+<p>请保持以下原则：</p>
+<ol>
+<li>虚拟机网卡使用 <code>Host-only (VMnet1)</code>。</li>
+<li>不要桥接到教室真实网络。</li>
+<li>VMnet1 的 VMware DHCP 建议关闭（避免干扰课堂 DHCP 实验）。</li>
+<li>若学校网络环境复杂，不影响本实验，因为本实验走本地隔离网段。</li>
+</ol>
+<hr />
+<h2 id="5">5. 启动与登录</h2>
+<ol>
+<li>启动虚拟机，等待系统完成启动。</li>
+<li>在主机浏览器访问：<code>http://192.168.2.2</code></li>
+<li>进入 LuCI 后打开实验页面：</li>
+<li>路径：<code>网络 -&gt; 网络实验</code></li>
+</ol>
+<hr />
+<h2 id="6">6. 实验基本流程（课堂）</h2>
+<p>推荐每轮按以下顺序进行：</p>
+<ol>
+<li>选择故障类型（DNS / DHCP / IP / 网关）。</li>
+<li>点击“注入故障”。</li>
+<li>点击“检查初始条件”（可选）。</li>
+<li>使用“检测修复”查看是否通过。</li>
+<li>在“修复表”中逐项提交修复参数。</li>
+<li>再次“检测修复”。</li>
+<li>点击“回退到初始状态”，准备下一轮实验。</li>
+</ol>
+<p>说明：</p>
+<ul>
+<li>默认 WAN 接口为 <code>wan</code>。</li>
+<li>网关题常见参考值：<code>192.168.2.1</code>（以教师要求为准）。</li>
+</ul>
+<hr />
+<h2 id="7">7. 常用排障（学生）</h2>
+<h3 id="71-19216822">7.1 无法打开 192.168.2.2</h3>
+<p>按顺序检查：</p>
+<ol>
+<li>虚拟机是否已开机。</li>
+<li>网卡是否是 VMnet1（Host-only）。</li>
+<li>主机 VMnet1 是否为 <code>192.168.2.1/24</code>。</li>
+<li>浏览器是否缓存旧页面，尝试 <code>Ctrl+F5</code>。</li>
+</ol>
+<h3 id="72">7.2 页面样式异常或菜单不正常</h3>
+<ol>
+<li>先 <code>Ctrl+F5</code> 强刷。</li>
+<li>关闭浏览器后重新打开。</li>
+<li>仍异常时联系教师恢复课程快照。</li>
+</ol>
+<h3 id="73">7.3 实验做崩了</h3>
+<p>不要重装，直接让教师指导“恢复快照”即可。</p>
+<hr />
+<h2 id="8">8. 教师建议（发放前）</h2>
+<ol>
+<li>用学生身份完整走一遍实验闭环。</li>
+<li>确认每个场景都可“注入 -&gt; 修复 -&gt; 回退”。</li>
+<li>记录一次成功截图，便于课堂对照。</li>
+</ol>
+<hr />
+<h2 id="9">9. 版本记录</h2>
+<ul>
+<li>OVA：<code>elabWrt_v0.ova</code></li>
+<li>SHA256：<code>77002F433A1F26A80A4CFE0D080B61C08085231077DE7D6A16A2508DE1E21848</code></li>
+<li>文档版本：<code>v1.0</code></li>
+<li>日期：<code>2026-02-27</code></li>
+</ul>
+<hr />
+<p>之前为AIGC内容 下面转人工</p>
+<h2 id="1ova">1.导入ova</h2>
+<p><img alt="sh1" src="images/sh1.png" /></p>
+<p><img alt="sh2" src="images/sh2.png" /></p>
+<p><img alt="sh3" src="images/sh3.png" /></p>
+<h2 id="2_1">2.配置虚拟网络适配器与虚拟网卡</h2>
+<p><img alt="sh4" src="images/sh4.png" /></p>
+<p><img alt="sh5" src="images/sh5.png" /></p>
+<p><img alt="sh6" src="images/sh6.png" /></p>
+<p><img alt="sh7" src="images/sh7.png" /></p>
+<h2 id="3">3.启动</h2>
+<p><img alt="sh8" src="images/sh8.png" /></p>
+<p>先确保网络适配器一致</p>
+<p><img alt="sh9" src="images/sh9.png" /></p>
+<p>可以不动也可以enter一下</p>
+<p><img alt="sh10" src="images/sh10.png" /></p>
+<p>等待编译完成之后enter</p>
+<p><img alt="sh11" src="images/sh11.png" /></p>
+<p>等待一会 在浏览器浏览 <a href="luci">http:/192.168.2.2</a> </p>
+<p><img alt="sh12" src="images/sh12.png" /></p>
+<p><img alt="sh13" src="images/sh13.png" /></p>
+<p><img alt="sh14" src="images/sh14.png" /></p>
+                </div>
+            </article>
+        </main>
+        
+        <footer>
+            <p>微机安装与调试 &copy; 2026</p>
+        </footer>
+    </div>
+</body>
+</html>
